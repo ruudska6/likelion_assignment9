@@ -1,6 +1,7 @@
 from django.db import models
 from django.db import models
 from users.models import User
+from django.conf import settings
 
 # Create your models here.
 
@@ -11,6 +12,7 @@ class Blog(models.Model):
     image = models.ImageField(upload_to='blog/', null=True)
     author = models.ForeignKey(User, on_delete = models.CASCADE, null = True)
     tags = models.ManyToManyField('Tag', blank = True)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_articles')
     class Meta:
         db_table = 'blog'
     
