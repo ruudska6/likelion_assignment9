@@ -11,6 +11,14 @@
   {% if user.is_authenticated %}
   <a href="users/logout">로그아웃</a>
   <h1>환영합니다! {{user.username}} 님</h1>
+  <div class="container mt-5">
+    <div class="profile-bio">
+        <h2>User Bio</h2>
+        <p>{{ user.profile.bio }}</p>
+    </div>
+</div>
+  <a href="{% url 'users-profile' %}">프로필 확인</a>
+
   <a class="new-post__button" href="{% url 'new' %}">새 글 작성하기</a>
   {% else %}
   <a href="users/signup">회원가입</a>

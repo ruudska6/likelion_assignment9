@@ -3,6 +3,15 @@ from django.contrib.auth import authenticate
 from .models import Profile
 from django.contrib import auth
 from django.contrib.auth import get_user_model
+
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from .forms import UpdateUserForm, UpdateProfileForm
+
+
 User = get_user_model()
 # 회원가입
 
@@ -44,3 +53,22 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return redirect('home')
+
+@login_required
+def profile(request):
+    user_form = UpdateUserForm(request.POST or None, instance=request.user)
+    profile_form = UpdateProfileForm(request.POST or None, request.FILES, instance=request.user.profile)
+
+    if request.method == 'POST':
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            messages.success(request, 'Your profile is updated successfully')
+            return redirect('users-profile')
+        else:
+            messages.error(request, 'Please correct the error below.')
+
+    return render(request, 'profile.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
